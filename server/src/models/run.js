@@ -390,21 +390,21 @@ const saveRun = (resultObj, transact) => {
 const updateBaseStats = (baseStats) => {
 	return {
 		// Totals
-		jumps: sequelize.literal(`if(jumps = 0, ${baseStats.jumps}, jumps + ${baseStats.jumps})`),
-		strafes: sequelize.literal(`if(strafes = 0, ${baseStats.strafes}, strafes + ${baseStats.strafes})`),
-		totalTime: sequelize.literal(`if(totalTime = 0, ${baseStats.totalTime}, totalTime + ${baseStats.totalTime})`),
+		jumps: sequelize.literal(`CASE WHEN jumps = 0 THEN ${baseStats.jumps} ELSE jumps + ${baseStats.jumps} END`),
+		strafes: sequelize.literal(`CASE WHEN strafes = 0 THEN ${baseStats.strafes} ELSE strafes + ${baseStats.strafes} END`),
+		totalTime: sequelize.literal(`CASE WHEN "totalTime" = 0 THEN ${baseStats.totalTime} ELSE "totalTime" + ${baseStats.totalTime} END`),
 		// Averages
-		avgStrafeSync: sequelize.literal(`if(avgStrafeSync = 0, ${baseStats.avgStrafeSync}, avgStrafeSync / 2.0 + ${baseStats.avgStrafeSync / 2.0})`),
-		avgStrafeSync2: sequelize.literal(`if(avgStrafeSync2 = 0, ${baseStats.avgStrafeSync2}, avgStrafeSync2 / 2.0 + ${baseStats.avgStrafeSync2 / 2.0})`),
-		enterTime: sequelize.literal(`if(enterTime = 0, ${baseStats.enterTime}, enterTime / 2.0 + ${baseStats.enterTime / 2.0})`),
-		velAvg3D: sequelize.literal(`if(velAvg3D = 0, ${baseStats.velAvg3D}, velAvg3D / 2.0 + ${baseStats.velAvg3D / 2.0})`),
-		velAvg2D: sequelize.literal(`if(velAvg2D = 0, ${baseStats.velAvg2D}, velAvg2D / 2.0 + ${baseStats.velAvg2D / 2.0})`),
-		velMax3D: sequelize.literal(`if(velMax3D = 0, ${baseStats.velMax3D}, velMax3D / 2.0 + ${baseStats.velMax3D / 2.0})`),
-		velMax2D: sequelize.literal(`if(velMax2D = 0, ${baseStats.velMax2D}, velMax2D / 2.0 + ${baseStats.velMax2D / 2.0})`),
-		velEnter3D: sequelize.literal(`if(velEnter3D = 0, ${baseStats.velEnter3D}, velEnter3D / 2.0 + ${baseStats.velEnter3D / 2.0})`),
-		velEnter2D: sequelize.literal(`if(velEnter2D = 0, ${baseStats.velEnter2D}, velEnter2D / 2.0 + ${baseStats.velEnter2D / 2.0})`),
-		velExit3D: sequelize.literal(`if(velExit3D = 0, ${baseStats.velExit3D}, velExit3D / 2.0 + ${baseStats.velExit3D / 2.0})`),
-		velExit2D: sequelize.literal(`if(velExit2D = 0, ${baseStats.velExit2D}, velExit2D / 2.0 + ${baseStats.velExit2D / 2.0})`),
+		avgStrafeSync: sequelize.literal(`CASE WHEN "avgStrafeSync" = 0 THEN ${baseStats.avgStrafeSync} ELSE "avgStrafeSync" / 2.0 + ${baseStats.avgStrafeSync / 2.0} END`),
+		avgStrafeSync2: sequelize.literal(`CASE WHEN "avgStrafeSync2" = 0 THEN ${baseStats.avgStrafeSync2} ELSE "avgStrafeSync2" / 2.0 + ${baseStats.avgStrafeSync2 / 2.0} END`),
+		enterTime: sequelize.literal(`CASE WHEN "enterTime" = 0 THEN ${baseStats.enterTime} ELSE "enterTime" / 2.0 + ${baseStats.enterTime / 2.0} END`),
+		velAvg3D: sequelize.literal(`CASE WHEN "velAvg3D" = 0 THEN ${baseStats.velAvg3D} ELSE "velAvg3D" / 2.0 + ${baseStats.velAvg3D / 2.0} END`),
+		velAvg2D: sequelize.literal(`CASE WHEN "velAvg2D" = 0 THEN ${baseStats.velAvg2D} ELSE "velAvg2D" / 2.0 + ${baseStats.velAvg2D / 2.0} END`),
+		velMax3D: sequelize.literal(`CASE WHEN "velMax3D" = 0 THEN ${baseStats.velMax3D} ELSE "velMax3D" / 2.0 + ${baseStats.velMax3D / 2.0} END`),
+		velMax2D: sequelize.literal(`CASE WHEN "velMax2D" = 0 THEN ${baseStats.velMax2D} ELSE "velMax2D" / 2.0 + ${baseStats.velMax2D / 2.0} END`),
+		velEnter3D: sequelize.literal(`CASE WHEN "velEnter3D" = 0 THEN ${baseStats.velEnter3D} ELSE "velEnter3D" / 2.0 + ${baseStats.velEnter3D / 2.0} END`),
+		velEnter2D: sequelize.literal(`CASE WHEN "velEnter2D" = 0 THEN ${baseStats.velEnter2D} ELSE "velEnter2D" / 2.0 + ${baseStats.velEnter2D / 2.0} END`),
+		velExit3D: sequelize.literal(`CASE WHEN "velExit3D" = 0 THEN ${baseStats.velExit3D} ELSE "velExit3D" / 2.0 + ${baseStats.velExit3D / 2.0} END`),
+		velExit2D: sequelize.literal(`CASE WHEN "velExit2D" = 0 THEN ${baseStats.velExit2D} ELSE "velExit2D" / 2.0 + ${baseStats.velExit2D / 2.0} END`),
 	}
 };
 
@@ -459,39 +459,33 @@ const updateStats = (resultObj, transaction) => {
 		if (isEntireTrack) {
 			// It's the entire track. Update the track's stats, each of its zones, and the map's stats as well
 			// The track's stats come from replay.overallStats
-			const trackUpd8Obj = {
-				completions: sequelize.literal('completions + 1'),
-			};
+			updates.push(resultObj.track.stats.increment('completions', {transaction: transaction}));
 
-			if (!playerCompletedThisTrackBefore)
-				trackUpd8Obj.uniqueCompletions = sequelize.literal('uniqueCompletions + 1');
+			if (!playerCompletedThisTrackBefore) {
+				updates.push(resultObj.track.stats.increment('uniqueCompletions', {transaction: transaction}));
+			}
 
-			updates.push(resultObj.track.stats.update(trackUpd8Obj, {transaction: transaction}));
 			updates.push(resultObj.track.stats.baseStats.update(updateBaseStats(resultObj.replay.overallStats), {transaction: transaction}));
 
 			for (const zone of resultObj.track.zones) {
 				if (zone.zoneNum === 0) continue;
-				const zoneUpd8Obj = {
-					completions: sequelize.literal('completions + 1'),
-				};
-				if (!playerCompletedThisZoneBefore)
-					zoneUpd8Obj.uniqueCompletions = sequelize.literal('uniqueCompletions + 1');
+				updates.push(zone.stats.increment('completions', {transaction: transaction}));
+				if (!playerCompletedThisZoneBefore) {
+					updates.push(zone.stats.increment('uniqueCompletions', {transaction: transaction}));
+				}
 
-				updates.push(zone.stats.update(zoneUpd8Obj, {transaction: transaction}));
 				updates.push(zone.stats.baseStats.update(
 					updateBaseStats(resultObj.replay.zoneStats[zone.zoneNum - 1].baseStats), {transaction: transaction}));
 			}
 
 			// Lastly update the map stats as well, if it was the main track
 			if (isEntireMainTrack) {
-				const mapUpd8Obj = {
-					totalCompletions: sequelize.literal('totalCompletions + 1'),
-				};
+				updates.push(resultObj.map.stats.increment('totalCompletions', {transaction: transaction}));
 
-				if (!playerCompletedMainTrackBefore)
-					mapUpd8Obj.totalUniqueCompletions = sequelize.literal('totalUniqueCompletions + 1');
+				if (!playerCompletedMainTrackBefore) {
+					updates.push(resultObj.map.stats.increment('totalUniqueCompletions', {transaction: transaction}));
+				}
 
-				updates.push(resultObj.map.stats.update(mapUpd8Obj, {transaction: transaction}));
 				updates.push(resultObj.map.stats.baseStats.update(updateBaseStats(resultObj.replay.overallStats), {transaction: transaction}));
 			}
 		}
@@ -500,13 +494,12 @@ const updateStats = (resultObj, transaction) => {
 			// The zone's stats are from replay.overallStats
 			for (const zone of resultObj.track.zones) {
 				if (zone.zoneNum === resultObj.replay.header.zoneNum) {
-					const zoneUpd8Obj = {
-						completions: sequelize.literal('completions + 1'),
-					};
-					if (!playerCompletedThisZoneBefore)
-						zoneUpd8Obj.uniqueCompletions = sequelize.literal('uniqueCompletions + 1');
+					updates.push(zone.stats.increment('completions', {transaction: transaction}));
 
-					updates.push(zone.stats.update(zoneUpd8Obj, {transaction: transaction}));
+					if (!playerCompletedThisZoneBefore) {
+						updates.push(zone.stats.increment('uniqueCompletions', {transaction: transaction}));
+					}
+
 					updates.push(zone.stats.baseStats.update(updateBaseStats(resultObj.replay.overallStats), {transaction: transaction}));
 					break;
 				}

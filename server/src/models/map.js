@@ -506,9 +506,9 @@ module.exports = {
 			if (!mapMdl)
 				return Promise.reject(new ServerError(404, 'Map not found'));
 
-			return MapStats.update({totalPlays: sequelize.literal('totalPlays + 1')}, {
+			return MapStats.increment('totalPlays', {
 				where: {
-					mapID: mapMdl.id,
+					mapID: mapMdl.id
 				}
 			}).then(() => {
 				return Promise.resolve(mapMdl);
@@ -567,9 +567,7 @@ module.exports = {
 	},
 
 	incrementDownloadCount: (mapID) => {
-		MapStats.update({
-			totalDownloads: sequelize.literal('totalDownloads + 1')
-		}, {where: {mapID: mapID}});
+		return MapStats.increment('totalDownloads', { where: { mapID: mapID }});
 	},
 
 };

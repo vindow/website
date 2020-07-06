@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, type) => {
 	return sequelize.define('mapZone', {
-		zoneNum: type.TINYINT.UNSIGNED,
+		zoneNum: type.SMALLINT,
 	}, {
 		indexes: [
 			{

@@ -5,7 +5,7 @@ const { Map, User, Run } = require('../../../config/sqlize');
 module.exports = (sequelize, type) => {
 	return sequelize.define('mapRank', {
 		mapID: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			primaryKey: true,
 			foreignKey: true,
 			references: {
@@ -14,7 +14,7 @@ module.exports = (sequelize, type) => {
 			}
 		},
 		userID: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			primaryKey: true,
 			foreignKey: true,
 			references: {
@@ -23,35 +23,35 @@ module.exports = (sequelize, type) => {
 			}
 		},
 		gameType: {
-			type: type.TINYINT.UNSIGNED,
+			type: type.SMALLINT,
 			primaryKey: true,
 		},
 		flags: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			primaryKey: true,
 			defaultValue: 0,
 		},
 		trackNum: {
-			type: type.TINYINT.UNSIGNED,
+			type: type.SMALLINT,
 			primaryKey: true,
 			defaultValue: 0,
 		},
 		zoneNum: {
-			type: type.TINYINT.UNSIGNED,
+			type: type.SMALLINT,
 			primaryKey: true,
 			defaultValue: 0,
 		},
 		runID: {
-			type: type.BIGINT.UNSIGNED,
+			type: type.BIGINT,
 			foreignKey: true,
 			references: {
 				model: Run,
 				key: 'id',
 			}
 		},
-		rank: type.INTEGER.UNSIGNED,
+		rank: type.INTEGER,
 		rankXP: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			defaultValue: 0,
 		},
 	});

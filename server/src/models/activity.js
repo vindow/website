@@ -7,7 +7,7 @@ const combineUsersToNotify = (activityModel, transaction, mapID, usersToNotify) 
 		where: {
 			mapID: mapID,
 			[Op.and]: [
-				sequelize.literal('notifyOn & ' + (1 << activityModel.type) + ' != 0')
+				sequelize.literal('"notifyOn" & ' + (1 << activityModel.type) + ' != 0')
 			],
 		},
 		raw: true,
@@ -43,9 +43,7 @@ const genNotifications = (activityModel, transaction, mapID) => {
 		attributes: [['followeeID', 'forUserID']],
 		where: {
 			followedID: activityModel.userID,
-			[Op.and]: [
-				sequelize.literal('notifyOn & ' + (1 << activityModel.type) + ' != 0')
-			],
+			notifyOn: sequelize.literal(`"follow"."notifyOn" & ${1 << activityModel.type} != 0`),
 		},
 		raw: true,
 		transaction: transaction,

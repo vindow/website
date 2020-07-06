@@ -319,7 +319,7 @@ module.exports = {
 		if (queryParams.playerIDs)
 			queryOptions.where.steamID = {[Op.in]: queryParams.playerIDs.split(',')};
 		if (queryParams.search)
-			queryOptions.where.alias = {[Op.like]: '%' + (queryParams.search || '') + '%'};
+			queryOptions.where.alias = {[Op.iLike]: '%' + (queryParams.search || '') + '%'};
 		if (queryParams.mapRank && !isNaN(queryParams.mapRank)) {
 			queryOptions.include.push({
 				model: UserMapRank,

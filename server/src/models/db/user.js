@@ -4,7 +4,7 @@ const config = require('../../../config/config');
 module.exports = (sequelize, type) => {
 	return sequelize.define('user', {
 		id: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			primaryKey: true,
 			autoIncrement: true
 		},
@@ -40,11 +40,11 @@ module.exports = (sequelize, type) => {
 			},
 		},
 		roles: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			defaultValue: 0
 		},
 		bans: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			defaultValue: 0
 		},
 		country: type.STRING(2),

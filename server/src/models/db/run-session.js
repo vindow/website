@@ -3,11 +3,11 @@
 module.exports = (sequelize, type) => {
 	return sequelize.define('runSession', {
 		id: {
-			type: type.BIGINT.UNSIGNED,
+			type: type.BIGINT,
 			primaryKey: true,
 			autoIncrement: true
 		},
-		trackNum: type.TINYINT.UNSIGNED,
-		zoneNum: type.TINYINT.UNSIGNED,
+		trackNum: type.SMALLINT,
+		zoneNum: type.SMALLINT,
 	})
 };

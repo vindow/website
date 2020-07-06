@@ -2,9 +2,9 @@
 
 module.exports = (sequelize, type) => {
 	return sequelize.define('mapTrack', {
-		trackNum: type.TINYINT.UNSIGNED,
-		numZones: type.TINYINT.UNSIGNED,
+		trackNum: type.SMALLINT,
+		numZones: type.SMALLINT,
 		isLinear: type.BOOLEAN,
-		difficulty: type.TINYINT.UNSIGNED,
+		difficulty: type.SMALLINT,
 	})
 };

@@ -15,7 +15,7 @@ module.exports = (sequelize, type) => {
 		  MAP_UPLOADED = 2,
 		}
 		 */
-		type: type.TINYINT,
+		type: type.SMALLINT,
 		data: type.BIGINT,
 	});
 };

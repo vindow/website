@@ -129,11 +129,9 @@ module.exports = {
 				mapFavModel = mapFavorite;
 				if (!created)
 					return Promise.resolve();
-				return MapStats.update({
-					totalFavorites: sequelize.literal('totalFavorites + 1')
-				}, {
+				return MapStats.increment('totalFavorites', {
 					where: { mapID: mapID },
-					transaction: t
+					transaction: t,
 				});
 			}).then(() => {
 				return Promise.resolve(mapFavModel);

@@ -117,11 +117,9 @@ module.exports = {
 				mapLibModel = mapLibEntry;
 				if (!created)
 					return Promise.resolve();
-				return MapStats.update({
-					totalSubscriptions: sequelize.literal('totalSubscriptions + 1')
-				}, {
-					where: {mapID: mapID},
-					transaction: t
+				return MapStats.increment('totalSubscriptions', {
+					where: { mapID: mapID },
+					transaction: t,
 				});
 			}).then(() => {
 				return Promise.resolve(mapLibModel);

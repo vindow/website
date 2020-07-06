@@ -3,13 +3,13 @@
 module.exports = (sequelize, type) => {
 	return sequelize.define('run', {
 		id: {
-			type: type.BIGINT.UNSIGNED,
+			type: type.BIGINT,
 			primaryKey: true,
 			autoIncrement: true
 		},
-		trackNum: type.TINYINT.UNSIGNED,
-		zoneNum: type.TINYINT.UNSIGNED,
-		ticks: type.INTEGER.UNSIGNED,
+		trackNum: type.SMALLINT,
+		zoneNum: type.SMALLINT,
+		ticks: type.INTEGER,
 		tickRate: type.FLOAT,
 		time: {
 			type: type.VIRTUAL,
@@ -17,7 +17,7 @@ module.exports = (sequelize, type) => {
 				return this.getDataValue('ticks') * this.getDataValue('tickRate');
 			}
 		},
-		flags: type.INTEGER.UNSIGNED,
+		flags: type.INTEGER,
 		file: type.STRING,
 		hash: type.STRING(40),
 	}, {

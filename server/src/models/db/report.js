@@ -3,8 +3,8 @@
 module.exports = (sequelize, type) => {
 	return sequelize.define('report', {
 		data: type.STRING, // everything's an int except for users...
-		type: type.TINYINT.UNSIGNED,
-		category: type.SMALLINT.UNSIGNED,
+		type: type.SMALLINT,
+		category: type.SMALLINT,
 		message: type.STRING(1000),
 		resolved: {
 			type: type.BOOLEAN,

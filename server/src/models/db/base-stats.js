@@ -3,16 +3,16 @@
 module.exports = (sequelize, type) => {
 	return sequelize.define('baseStats', {
 		id: {
-			type: type.BIGINT.UNSIGNED,
+			type: type.BIGINT,
 			primaryKey: true,
 			autoIncrement: true,
 		},
 		jumps: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			defaultValue: 0,
 		},
 		strafes: {
-			type: type.INTEGER.UNSIGNED,
+			type: type.INTEGER,
 			defaultValue: 0,
 		},
 		avgStrafeSync: {

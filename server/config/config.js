@@ -75,7 +75,7 @@ const config = {
 		db: {
 			name: 'momentum',
 			userName: 'mom',
-			password: '',
+			password: 'mom',
 			host: 'localhost',
 			logging: console.log,
 			pool: {

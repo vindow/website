@@ -45,7 +45,7 @@ const sequelize = new Sequelize({
 	password: config.db.password,
 	host: config.db.host,
 	logging: config.db.logging,
-	dialect: 'mysql',
+	dialect: 'postgres',
 	define: { // TODO: consider definition to be at column/table level?
 		charset: 'utf8mb4',
 		collate: 'utf8mb4_unicode_ci'
@@ -54,12 +54,13 @@ const sequelize = new Sequelize({
 });
 
 const forceSyncDB = () => {
-	return sequelize.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true })
+	/*return sequelize.query('SET session_replication_role = \'replica\'', { raw: true })
 	.then(() => {
 		return sequelize.sync({force: true});
 	}).then(() => {
-		return sequelize.query('SET FOREIGN_KEY_CHECKS = 1', { raw: true });
-	});
+		return sequelize.query('SET session_replication_role = \'origin\'', { raw: true });
+	});*/
+	return sequelize.sync({force: true});
 };
 
 const User = UserModel(sequelize, Sequelize);
