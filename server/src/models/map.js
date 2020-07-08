@@ -13,36 +13,16 @@ const util = require('util'),
 	queryHelper = require('../helpers/query'),
 	mapImage = require('./map-image'),
 	ServerError = require('../helpers/server-error'),
-	config = require('../../config/config');
-
-const genFileHash = (mapPath) => {
-	return new Promise((resolve, reject) => {
-		const hash = crypto.createHash('sha1').setEncoding('hex');
-		fs.createReadStream(mapPath).pipe(hash)
-			.on('error', err => reject(err))
-			.on('finish', () => {
-				resolve(hash.read())
-			});
-	});
-};
+	config = require('../../config/config'),
+	store_local = require('../helpers/filestore-local'),
+	store_cloud = require('../helpers/filestore-cloud');
 
 const storeMapFile = (mapFile, mapModel) => {
-	const moveMapTo = util.promisify(mapFile.mv);
-	const fileName = mapModel.name + '.bsp';
-	const basePath = __dirname + '/../../public/maps';
-	const fullPath = basePath + '/' + fileName;
-	const downloadURL = config.baseUrl + '/api/maps/' + mapModel.id + '/download';
-	return moveMapTo(fullPath).then(() => {
-		return genFileHash(fullPath).then(hash => {
-			return Promise.resolve({
-				fileName: fileName,
-				basePath: basePath,
-				fullPath: fullPath,
-				downloadURL: downloadURL,
-				hash: hash
-			})
-		});
-	});
+	if (config.storage.use === 'b2') {
+		return store_cloud.storeFileCloud(mapFile.data, `maps/${mapModel.id}.bsp`)
+	}
+
+	return store_local.storeMapFileLocal(mapFile, mapModel);
 };
 
 const verifyMapNameNotTaken = (mapName) => {

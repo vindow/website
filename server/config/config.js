@@ -45,6 +45,9 @@ const config = {
 		session: {
 			secret: 'keyboard cat',
 		},
+		storage: {
+			use: 'local',
+		}
 	},
 	development: {
 		root: rootPath,
@@ -88,6 +91,15 @@ const config = {
 		session: {
 			secret: 'keyboard cat',
 		},
+		storage: {
+			use: process.env.FILE_STORAGE_TYPE || 'local',
+			b2: {
+				appKeyID: process.env.B2_APP_KEY_ID,
+				appKey: process.env.B2_APP_KEY,
+				bucketID: process.env.B2_BUCKET_ID,
+				bucketURL: process.env.B2_BUCKET_URL,
+			}
+		}
 	},
 	production: {
 		root: rootPath,
@@ -131,6 +143,15 @@ const config = {
 		session: {
 			secret: process.env.EXPRESS_SESSION_SECRET,
 		},
+		storage: {
+			use: process.env.FILE_STORAGE_TYPE,
+			b2: {
+				appKeyID: process.env.B2_APP_KEY_ID,
+				appKey: process.env.B2_APP_KEY,
+				bucketID: process.env.B2_BUCKET_ID,
+				bucketURL: process.env.B2_BUCKET_URL,
+			}
+		}
 	}
 };
 
